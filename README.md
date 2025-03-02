@@ -14,9 +14,6 @@ An AI Agent that answers questions about Django's governance based on DEP 10 & D
 ```shell
 # Install required tools
 pip install --upgrade pip uv
-
-# Project uses script directives for dependencies
-# No separate installation step needed
 ```
 
 ## Usage
