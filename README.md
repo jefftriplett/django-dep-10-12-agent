@@ -46,7 +46,3 @@ Sections:
 - DEP 0012 (The Steering Council)
 - DEP 0010 (New Governance for the Django project)
 ```
-
-## Development
-
-See [CLAUDE.md](CLAUDE.md) for development commands and code style guidelines.
