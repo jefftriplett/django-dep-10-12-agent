@@ -37,19 +37,6 @@ You are a Django Software Foundation expert on Django Enhanced Proposals (DEPs).
 - Please warn the user that this not official or legal advice.
 
 </behavior_guidelines>
-
-<dep-10>
-
-{dep_10}
-
-</dep-10>
-
-<dep-12>
-
-{dep_12}
-
-</dep-12>
-
 """
 
 
@@ -90,13 +77,19 @@ def get_agent():
         cache_file="0012-steering-council.rst",
     )
 
-    system_prompt = SYSTEM_PROMPT.format(dep_10=dep_10, dep_12=dep_12)
-
     agent = Agent(
         model=OPENAI_MODEL_NAME,
         output_type=Output,
-        system_prompt=system_prompt,
+        system_prompt=SYSTEM_PROMPT,
     )
+
+    @agent.instructions
+    def add_dep_10() -> str:
+        return f"<dep-10>\n\n{dep_10}\n\n</dep-10>"
+
+    @agent.instructions
+    def add_dep_12() -> str:
+        return f"<dep-12>\n\n{dep_12}\n\n</dep-12>"
 
     return agent
 
