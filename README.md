@@ -20,7 +20,7 @@ pip install --upgrade pip uv
 
 ```shell
 # Using uv directly
-$ uv run agent.py "How long are steering council terms?"
+$ uv run src/agent.py "How long are steering council terms?"
 
 # Using just command
 $ just ask "How long are steering council terms?"
