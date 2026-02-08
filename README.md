@@ -4,42 +4,36 @@ An AI Agent that answers questions about Django's governance based on DEP 10 & D
 
 **Please note:** This is not official or legal advice.
 
+## Usage
+
+```shell
+# Ask about Django governance
+just ask "How long are steering council terms?"
+
+# Or use uv directly
+uv run src/agent.py ask "How long are steering council terms?"
+```
+
+## Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `just` | List all available commands |
+| `just ask "..."` | Ask the DEP agent a question |
+| `just debug` | Print the compiled system prompt for debugging |
+| `just demo` | Run a demo with a sample question |
+| `just bootstrap` | Install pip and uv |
+| `just fmt` | Format code |
+| `just lint` | Run pre-commit hooks on all files |
+| `just lint-autoupdate` | Update pre-commit hooks to latest versions |
+
 ## Requirements
 
 - Python 3.12+
-- [uv](https://github.com/astral-sh/uv) package manager
+- OpenAI API key (set `OPENAI_API_KEY` environment variable)
 
 ## Installation
 
 ```shell
-# Install required tools
-pip install --upgrade pip uv
-```
-
-## Usage
-
-```shell
-# Using uv directly
-$ uv run src/agent.py "How long are steering council terms?"
-
-# Using just command
-$ just ask "How long are steering council terms?"
-
-# Quick demo with sample question
-$ just demo
-```
-
-### Example Output
-
-```
-Answer: The governance documents do not specify a fixed term length for Steering Council members. Instead, members serve until a new election is held under the
-conditions set out in the DEPs (for example, triggered by events like the conclusion of a major release series or if a vote of no confidence is raised).
-
-Reasoning: Neither DEP 0012 (which renames the Technical Board to the Steering Council) nor its predecessor, DEP 0010, defines a fixed term length for Steering Council
-members. The documents outline conditions under which elections are triggered, meaning that members serve until they are replaced through that process. In short, the
-terms are not defined by a set period, but by the occurrence of specific events or renewed elections.
-
-Sections:
-- DEP 0012 (The Steering Council)
-- DEP 0010 (New Governance for the Django project)
+just bootstrap
 ```
