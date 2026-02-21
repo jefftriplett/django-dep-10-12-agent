@@ -5,6 +5,7 @@
 #     "httpx",
 #     "environs",
 #     "pydantic-ai-slim[openai]",
+#     "pydantic-ai-slim[web]",
 #     "rich",
 #     "typer",
 # ]
@@ -67,30 +68,34 @@ def fetch_and_cache(
     return contents
 
 
-def get_agent():
+def load_data():
     dep_10 = fetch_and_cache(
         url="https://raw.githubusercontent.com/django/deps/refs/heads/main/final/0010-new-governance.rst",
         cache_file="0010-new-governance.rst",
     )
-
     dep_12 = fetch_and_cache(
         url="https://raw.githubusercontent.com/django/deps/refs/heads/main/final/0012-steering-council.rst",
         cache_file="0012-steering-council.rst",
     )
+    return {"dep_10": dep_10, "dep_12": dep_12}
+
+
+def get_agent(*, output_type=Output):
+    data = load_data()
 
     agent = Agent(
         model=OPENAI_MODEL_NAME,
-        output_type=Output,
+        output_type=output_type,
         system_prompt=SYSTEM_PROMPT,
     )
 
     @agent.instructions
     def add_dep_10() -> str:
-        return f"<dep-10>\n\n{dep_10}\n\n</dep-10>"
+        return f"<dep-10>\n\n{data['dep_10']}\n\n</dep-10>"
 
     @agent.instructions
     def add_dep_12() -> str:
-        return f"<dep-12>\n\n{dep_12}\n\n</dep-12>"
+        return f"<dep-12>\n\n{data['dep_12']}\n\n</dep-12>"
 
     return agent
 
@@ -117,22 +122,30 @@ def ask(question: str):
 
 
 @app.command()
+def web(
+    host: str = "127.0.0.1",
+    port: int = 8080,
+):
+    """Launch the DEP agent as a web chat interface."""
+    import uvicorn
+
+    agent = get_agent(output_type=None)
+    web_app = agent.to_web()
+
+    console.print(f"[bold green]Starting web interface at http://{host}:{port}[/bold green]")
+    uvicorn.run(web_app, host=host, port=port)
+
+
+@app.command()
 def debug():
     """Print the compiled system prompt for debugging."""
-    dep_10 = fetch_and_cache(
-        url="https://raw.githubusercontent.com/django/deps/refs/heads/main/final/0010-new-governance.rst",
-        cache_file="0010-new-governance.rst",
-    )
-    dep_12 = fetch_and_cache(
-        url="https://raw.githubusercontent.com/django/deps/refs/heads/main/final/0012-steering-council.rst",
-        cache_file="0012-steering-council.rst",
-    )
+    data = load_data()
 
     console.print("[bold cyan]===== SYSTEM PROMPT =====[/bold cyan]\n")
     console.print(SYSTEM_PROMPT)
     console.print("\n[bold cyan]===== INSTRUCTIONS =====[/bold cyan]\n")
-    console.print(f"<dep-10>\n\n{dep_10}\n\n</dep-10>")
-    console.print(f"\n<dep-12>\n\n{dep_12}\n\n</dep-12>")
+    console.print(f"<dep-10>\n\n{data['dep_10']}\n\n</dep-10>")
+    console.print(f"\n<dep-12>\n\n{data['dep_12']}\n\n</dep-12>")
     console.print("\n[bold cyan]=========================[/bold cyan]")
 
 
