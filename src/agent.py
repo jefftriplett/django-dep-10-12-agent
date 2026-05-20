@@ -102,7 +102,10 @@ def get_agent(*, output_type=Output):
     return agent
 
 
-app = typer.Typer(help="Django DEP Agent - Ask questions about Django governance")
+app = typer.Typer(
+    help="Django DEP Agent - Ask questions about Django governance",
+    no_args_is_help=True,
+)
 
 
 @app.command()
